@@ -17,6 +17,6 @@ RUN  pacman-key --init && \
      find /var/cache/pacman/ -type f -delete
 
 FROM scratch
-LABEL org.opencontainers.image.description="Snigdha OS - Arch-based distribution offering an easy installation, several customizations, and unique performance optimization."
+LABEL org.opencontainers.image.description="Snigdha OS - Arch based Linux Distribution for Penetration Testing and Ethical Hacking"
 COPY --from=rootfs / /
 CMD ["/usr/bin/bash"]
