@@ -3,7 +3,7 @@ name: Snigdha OS Docker Image
 on:
   workflow_dispatch:
   schedule:
-    - cron: '30 05 * * *'
+    - cron: '30 05 * * *'  # Cron schedule for automatic builds (adjust as needed)
   push:
     branches:
       - 'master'
@@ -11,26 +11,50 @@ on:
 jobs:
   docker:
     runs-on: ubuntu-latest
+
     steps:
-      -
-        name: Checkout
-        uses: actions/checkout@v4
-      -
-        name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-      -
-        name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-      -
-        name: Login to Docker Hub
-        uses: docker/login-action@v3
+      # Checkout repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Set up QEMU for multi-architecture builds
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      # Set up Docker Buildx for advanced builds (multi-arch, caching)
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      # Login to Docker Hub using secrets for security
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      -
-        name: Build and push
-        uses: docker/build-push-action@v6
+
+      # Cache Docker layers to speed up build time
+      - name: Cache Docker layers
+        uses: actions/cache@v3
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
+      # Build and push Docker image with multi-architecture support
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
         with:
           context: .
           push: true
           tags: snigdhaos/snigdhaos:latest
+          platforms: linux/amd64,linux/arm64  # Support for multiple architectures
+          cache-from: type=registry,ref=snigdhaos/snigdhaos:latest  # Enable cache from Docker registry
+
+      # Optionally, tag the build with a version from GitHub
+      - name: Tag Docker image with version
+        run: |
+          VERSION=$(git describe --tags --abbrev=0)
+          docker tag snigdhaos/snigdhaos:latest snigdhaos/snigdhaos:${VERSION}
+          docker push snigdhaos/snigdhaos:${VERSION}
+
