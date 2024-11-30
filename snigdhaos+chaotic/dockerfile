@@ -44,7 +44,7 @@ LABEL org.opencontainers.image.title="Snigdha OS Container" \
       org.opencontainers.image.description="Snigdha OS - Arch-based Linux distribution for Penetration Testing and Ethical Hacking, with Chaotic AUR preconfigured" \
       org.opencontainers.image.version="1.0" \
       org.opencontainers.image.authors="Snigdha OS Team" \
-      org.opencontainers.image.licenses="GPL-3.0-or-later"
+      org.opencontainers.image.licenses="MIT"
 
 # Copy the prepared root filesystem
 COPY --from=rootfs / /
