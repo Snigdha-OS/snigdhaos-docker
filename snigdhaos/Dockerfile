@@ -14,8 +14,8 @@ RUN curl -fsSL https://raw.githubusercontent.com/Snigdha-OS/snigdhaos-pkgbuilds/
 
 # Initialize pacman keyring and trust Snigdha OS signing key
 RUN pacman-key --init && \
-    pacman-key --recv-keys E1415F19F21171F2 --keyserver keyserver.ubuntu.com && \
-    pacman-key --lsign-key E1415F19F21171F2
+    pacman-key --recv-keys 93BC54415EA8E7AB --keyserver keyserver.ubuntu.com && \
+    pacman-key --lsign-key 93BC54415EA8E7AB
 
 # Install Snigdha OS-specific packages and keyring
 RUN pacman -Sy && \
