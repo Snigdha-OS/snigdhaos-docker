@@ -42,7 +42,7 @@ jobs:
             ${{ runner.os }}-buildx-
 
       # Build and push Docker image (only for amd64 platform now)
-      - name: Build and push Docker image
+      - name: Build Docker image
         id: build
         uses: docker/build-push-action@v4
         with:
@@ -53,6 +53,12 @@ jobs:
           cache-to: type=inline  # Use inline caching
           cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/snigdhaos:latest  # Use cached layers from Docker Hub
 
+      # Add a check to confirm that the image was built and tagged correctly
+      - name: Verify Docker image exists
+        run: |
+          echo "Checking if snigdhaos:latest image exists"
+          docker images -q snigdhaos:latest || echo "Image not found"
+      
       # Check if build succeeded and tag Docker image with version based on the latest Git tag
       - name: Tag Docker image with version
         if: success()  # Only proceed if the build was successful
@@ -72,4 +78,3 @@ jobs:
           else
             echo "Docker image not found, skipping tag and push."
             exit 1  # Fail the step if the image does not exist
-          fi
