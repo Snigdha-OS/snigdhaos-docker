@@ -57,7 +57,7 @@ jobs:
       - name: Verify Docker image exists
         run: |
           echo "Checking if snigdhaos:latest image exists"
-          docker images -q snigdhaos:latest || echo "Image not found"
+          docker images -q ${{ secrets.DOCKERHUB_USERNAME }}/snigdhaos:latest || echo "Image not found"
       
       # Check if build succeeded and tag Docker image with version based on the latest Git tag
       - name: Tag Docker image with version
