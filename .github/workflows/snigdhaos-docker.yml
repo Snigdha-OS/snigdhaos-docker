@@ -17,7 +17,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Set up QEMU for multi-architecture builds (optional, now removed arm64)
+      # Set up QEMU for multi-architecture builds
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
@@ -43,6 +43,7 @@ jobs:
 
       # Build and push Docker image (only for amd64 platform now)
       - name: Build and push Docker image
+        id: build
         uses: docker/build-push-action@v4
         with:
           context: ./snigdhaos  # Ensure the Dockerfile is inside the snigdhaos directory
@@ -52,8 +53,9 @@ jobs:
           cache-to: type=inline  # Use inline caching
           cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/snigdhaos:latest  # Use cached layers from Docker Hub
 
-      # Tag Docker image with version based on the latest Git tag
+      # Check if build succeeded and tag Docker image with version based on the latest Git tag
       - name: Tag Docker image with version
+        if: success()  # Only proceed if the build was successful
         run: |
           VERSION=$(git tag -l | tail -n 1 || echo "latest")  # Get the latest tag or fallback to "latest"
           
@@ -62,6 +64,12 @@ jobs:
             VERSION="latest"
           fi
           
-          # Tag and push the image
-          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/snigdhaos:latest ${{ secrets.DOCKERHUB_USERNAME }}/snigdhaos:${VERSION}
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/snigdhaos:${VERSION}
+          # Verify if the image exists before tagging
+          if docker image inspect ${{ secrets.DOCKERHUB_USERNAME }}/snigdhaos:latest > /dev/null 2>&1; then
+            echo "Image exists, tagging with version: $VERSION"
+            docker tag ${{ secrets.DOCKERHUB_USERNAME }}/snigdhaos:latest ${{ secrets.DOCKERHUB_USERNAME }}/snigdhaos:${VERSION}
+            docker push ${{ secrets.DOCKERHUB_USERNAME }}/snigdhaos:${VERSION}
+          else
+            echo "Docker image not found, skipping tag and push."
+            exit 1  # Fail the step if the image does not exist
+          fi
