@@ -52,9 +52,9 @@ jobs:
           cache-to: type=inline  # Use inline caching
           cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/snigdhaos:latest  # Use cached layers from Docker Hub
 
-      # Optionally, tag the build with a version from GitHub
+      # Tag Docker image with version based on the latest Git tag
       - name: Tag Docker image with version
         run: |
-          VERSION=$(git describe --tags --abbrev=0 || echo "latest")
+          VERSION=$(git tag -l | tail -n 1 || echo "latest")  # Get the latest tag or fallback to "latest"
           docker tag ${{ secrets.DOCKERHUB_USERNAME }}/snigdhaos:latest ${{ secrets.DOCKERHUB_USERNAME }}/snigdhaos:${VERSION}
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/snigdhaos:${VERSION}
