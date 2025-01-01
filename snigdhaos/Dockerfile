@@ -1,9 +1,9 @@
 # Stage 1: Build the root filesystem
-FROM archlinux:base-devel AS rootfs
+FROM archlinux:latest AS rootfs
 
-# Update system and install base packages
+# Update system and install essential packages
 RUN pacman -Syu --noconfirm && \
-    pacman -S --needed --noconfirm pacman-contrib git openssh sudo curl
+    pacman -S --needed --noconfirm base-devel pacman-contrib git openssh sudo curl
 
 # Add custom pacman configuration
 COPY pacman.conf /etc/pacman.conf
@@ -40,5 +40,9 @@ LABEL org.opencontainers.image.title="Snigdha OS Container" \
 # Copy the prepared root filesystem
 COPY --from=rootfs / /
 
+# Set environment variables (optional)
+ENV LANG=C.UTF-8 \
+    PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
 # Default command
-CMD ["/usr/bin/bash"]
+CMD ["/bin/bash"]
