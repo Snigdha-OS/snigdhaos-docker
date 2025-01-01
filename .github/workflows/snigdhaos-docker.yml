@@ -17,7 +17,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Set up QEMU for multi-architecture builds
+      # Set up QEMU for multi-architecture builds (optional, now removed arm64)
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
@@ -41,17 +41,16 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-buildx-
 
-      # Build and push Docker image with multi-architecture support
+      # Build and push Docker image (only for amd64 platform now)
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
-          context: ./snigdhaos  # Update context to the snigdhaos directory
+          context: ./snigdhaos  # Ensure the Dockerfile is inside the snigdhaos directory
           push: true
-          tags: |
-            snigdhaos/snigdhaos:latest
-          platforms: linux/amd64,linux/arm64  # Support for multiple architectures
-          cache-to: type=inline  # Improved caching mechanism
-          cache-from: type=registry,ref=snigdhaos/snigdhaos:latest
+          tags: snigdhaos/snigdhaos:latest
+          platforms: linux/amd64  # Only build for amd64
+          cache-to: type=inline  # Use inline caching
+          cache-from: type=registry,ref=snigdhaos/snigdhaos:latest  # Use cached layers from Docker Hub
 
       # Optionally, tag the build with a version from GitHub
       - name: Tag Docker image with version
