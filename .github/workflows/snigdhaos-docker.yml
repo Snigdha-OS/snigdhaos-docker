@@ -56,5 +56,12 @@ jobs:
       - name: Tag Docker image with version
         run: |
           VERSION=$(git tag -l | tail -n 1 || echo "latest")  # Get the latest tag or fallback to "latest"
+          
+          # Ensure VERSION is not empty, default to "latest" if it's empty
+          if [ -z "$VERSION" ]; then
+            VERSION="latest"
+          fi
+          
+          # Tag and push the image
           docker tag ${{ secrets.DOCKERHUB_USERNAME }}/snigdhaos:latest ${{ secrets.DOCKERHUB_USERNAME }}/snigdhaos:${VERSION}
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/snigdhaos:${VERSION}
