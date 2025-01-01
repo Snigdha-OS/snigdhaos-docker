@@ -47,14 +47,14 @@ jobs:
         with:
           context: ./snigdhaos  # Ensure the Dockerfile is inside the snigdhaos directory
           push: true
-          tags: snigdhaos/snigdhaos:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/snigdhaos:latest  # Add your Docker Hub username here
           platforms: linux/amd64  # Only build for amd64
           cache-to: type=inline  # Use inline caching
-          cache-from: type=registry,ref=snigdhaos/snigdhaos:latest  # Use cached layers from Docker Hub
+          cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/snigdhaos:latest  # Use cached layers from Docker Hub
 
       # Optionally, tag the build with a version from GitHub
       - name: Tag Docker image with version
         run: |
           VERSION=$(git describe --tags --abbrev=0 || echo "latest")
-          docker tag snigdhaos/snigdhaos:latest snigdhaos/snigdhaos:${VERSION}
-          docker push snigdhaos/snigdhaos:${VERSION}
+          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/snigdhaos:latest ${{ secrets.DOCKERHUB_USERNAME }}/snigdhaos:${VERSION}
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/snigdhaos:${VERSION}
