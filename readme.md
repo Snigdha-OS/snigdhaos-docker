@@ -41,3 +41,96 @@ CMD ["python", "app.py"]
 - **Portability**: Once built, Docker images can be shared and run on any platform that supports Docker.
 
 In essence, a Dockerfile is a blueprint for creating Docker images, ensuring the environment is consistent and reproducible.
+
+# Snigdha OS Docker 🚀
+
+[Snigdha OS](https://github.com/Snigdha-OS/snigdhaos-docker) is a minimal operating system designed to run in Docker containers. It is a lightweight, open-source solution for users looking to leverage SnigdhaOS within Docker environments. This repository provides the necessary files to build and run SnigdhaOS containers.
+
+### 🛠️ Features
+
+- **Lightweight and minimal**: Optimized for Docker environments with minimal resource usage.
+- **Customizable**: Tailor the OS to your needs by modifying configurations and adding your own tools.
+- **Docker-ready**: Pre-configured Dockerfile for easy deployment in containerized environments.
+
+### 📋 Prerequisites
+
+Before you start, make sure you have the following installed on your local machine:
+
+- **Docker**: [Install Docker](https://docs.docker.com/get-docker/)
+- **Git**: [Install Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
+
+### 🚀 Getting Started
+
+#### 1. Clone the repository
+
+To get started with SnigdhaOS Docker, first, clone this repository to your local machine:
+
+```bash
+git clone https://github.com/Snigdha-OS/snigdhaos-docker.git
+cd snigdhaos-docker
+```
+
+#### 2. Build the Docker image
+
+Once you have cloned the repository, you can build the Docker image using the Dockerfile provided:
+
+```bash
+docker build -t snigdhaos:latest .
+```
+
+This command will create a Docker image named `snigdhaos` tagged with `latest`.
+
+#### 3. Run the Docker container
+
+After building the Docker image, you can run SnigdhaOS in a container:
+
+```bash
+docker run -it snigdhaos:latest
+```
+
+This will start a new Docker container and open an interactive terminal session with SnigdhaOS running inside it.
+
+#### 4. Docker Compose (Optional)
+
+If you'd like to run SnigdhaOS with Docker Compose for easier management, you can use the provided `docker-compose.yml` file. To start the container with Docker Compose, run:
+
+```bash
+docker-compose up -d
+```
+
+This will launch the container in the background. To stop the container, run:
+
+```bash
+docker-compose down
+```
+
+### 🔧 Customization
+
+You can customize SnigdhaOS for your use case by modifying the Dockerfile or by extending it with additional tools and libraries. After making changes, rebuild the image using the command:
+
+```bash
+docker build -t snigdhaos:latest .
+```
+
+### 🤝 Contributing
+
+Contributions are welcome! If you'd like to improve SnigdhaOS Docker, feel free to fork the repository and submit a pull request with your changes.
+
+### Steps to contribute:
+1. Fork the repository.
+2. Create a new branch for your feature or bug fix.
+3. Make your changes and commit them.
+4. Push your changes and create a pull request.
+
+### 📜 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+### 🙏 Acknowledgements
+
+- **Docker**: For providing an easy-to-use containerization platform.
+- **SnigdhaOS**: For the core OS functionalities that can be containerized.
+
+### 👨‍💻 Developer
+
+This project is maintained by **Eshan Roy | eshanized**.
